@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Song } from "@/lib/types";
 import { cnSearchLinks } from "@/lib/cnLinks";
+import { searchMusic } from "@/lib/providers";
 
 function formatDuration(sec?: number) {
   if (!sec || sec <= 0) return "";
@@ -26,9 +27,7 @@ export default function Page() {
     setLoading(true);
     setErr(null);
     try {
-      const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
+      const data = await searchMusic(query);
       setResults(data.results ?? []);
     } catch (e: any) {
       setErr(e?.message ?? "search failed");
